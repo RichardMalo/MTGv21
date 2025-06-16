@@ -6,33 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Plotly -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <style>
-        body { font-family: sans-serif; margin: 2em; background: #fff; color: #222; }
-        .dark-mode { background: #222; color: #eee; }
-        .form-container, .circles-container { display: flex; gap: 1.5em; flex-wrap: wrap; margin-bottom: 1.5em; }
-        .form-section { background: #f4f4f4; padding: 1em; border-radius: 10px; }
-        .dark-mode .form-section { background: #333; }
-        label { display: block; margin-top: 0.8em; }
-        .monthly-payment-circle, .payment-breakdown-circle { 
-            width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; background: #eee; font-size: 1.5em; font-weight: bold;
-            margin-bottom: 0.6em; transition: background 0.3s; 
-        }
-        .dark-mode .monthly-payment-circle, .dark-mode .payment-breakdown-circle { background: #444; }
-        .monthly-payment-circle.visible, .payment-breakdown-circle.visible { box-shadow: 0 0 0 3px #2a9d8f; }
-        .charts-grid { display: flex; flex-wrap: wrap; gap: 2em; }
-        .chart-box { width: 480px; min-width: 320px; background: #fafafa; border-radius: 10px; padding: 1em; margin-bottom: 1.5em;}
-        .dark-mode .chart-box { background: #222; }
-        #amortization-table { width: 100%; border-collapse: collapse; margin-top: 1.2em; }
-        #amortization-table th, #amortization-table td { border: 1px solid #ccc; padding: 0.5em 0.8em; }
-        #amortization-table th { background: #eee; }
-        .dark-mode #amortization-table th { background: #333; }
-        #error-message { color: #d32f2f; font-weight: bold; margin-bottom: 1em; }
-        @media (max-width: 900px) {
-            .charts-grid, .form-container, .circles-container { flex-direction: column; }
-            .chart-box { width: 100%; }
-        }
-    </style>
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Mortgage Calculator</h1>
@@ -75,7 +50,9 @@
             </label>
             <div class="circles-container">
                 <div class="monthly-payment-circle" id="monthlyPaymentCircle" aria-live="polite"></div>
-                <div class="payment-breakdown-circle" id="paymentBreakdownCircle" aria-live="polite"></div>
+                <div class="donut-chart-container">
+                    <div id="paymentBreakdownCircle" aria-live="polite"></div>
+                </div>
             </div>
             <div>
                 <label>Interest Saved: <input id="extraSavedTotal" type="text" readonly></label>

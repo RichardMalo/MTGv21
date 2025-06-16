@@ -1,0 +1,124 @@
+body {
+    font-family: sans-serif;
+    margin: 2em;
+    background: #fff;
+    color: #222;
+}
+
+.dark-mode {
+    background: #222;
+    color: #eee;
+}
+
+.form-container {
+    display: flex;
+    gap: 1.5em;
+    flex-wrap: wrap;
+    margin-bottom: 1.5em;
+}
+
+.form-section {
+    background: #f4f4f4;
+    padding: 1em;
+    border-radius: 10px;
+}
+
+.dark-mode .form-section {
+    background: #333;
+}
+
+label {
+    display: block;
+    margin-top: 0.8em;
+}
+
+/* --- Circles layout fix --- */
+.circles-container {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    margin-bottom: 1em;
+}
+
+.monthly-payment-circle {
+    width: 220px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #eee;
+    font-size: 2em;
+    font-weight: bold;
+    box-shadow: 0 0 0 2px #457b9d22;
+    transition: background 0.3s;
+    margin: 0;
+}
+
+.donut-chart-container {
+    width: 220px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+#paymentBreakdownCircle {
+    width: 220px;
+    height: 220px;
+    background: transparent;
+}
+
+.dark-mode .monthly-payment-circle { background: #444; }
+.monthly-payment-circle.visible { box-shadow: 0 0 0 3px #2a9d8f; }
+
+.charts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+}
+
+.chart-box {
+    width: 480px;
+    min-width: 320px;
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 1em;
+    margin-bottom: 1.5em;
+}
+.dark-mode .chart-box { background: #222; }
+
+#amortization-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.2em;
+}
+
+#amortization-table th,
+#amortization-table td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.8em;
+}
+#amortization-table th { background: #eee; }
+.dark-mode #amortization-table th { background: #333; }
+
+#error-message {
+    color: #d32f2f;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+@media (max-width: 900px) {
+    .charts-grid,
+    .form-container,
+    .circles-container { flex-direction: column; }
+    .chart-box { width: 100%; }
+    .monthly-payment-circle,
+    .donut-chart-container,
+    #paymentBreakdownCircle {
+        width: 90vw; min-width: 160px; max-width: 340px;
+        height: 90vw; min-height: 160px; max-height: 340px;
+        font-size: 1.5em;
+    }
+}
