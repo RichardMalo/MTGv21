@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mortgage Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background: #fff; color: #222; }
+        .dark-mode { background: #222; color: #eee; }
+        .form-container, .circles-container { display: flex; gap: 1.5em; flex-wrap: wrap; margin-bottom: 1.5em; }
+        .form-section { background: #f4f4f4; padding: 1em; border-radius: 10px; }
+        .dark-mode .form-section { background: #333; }
+        label { display: block; margin-top: 0.8em; }
+        .monthly-payment-circle, .payment-breakdown-circle { 
+            width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; background: #eee; font-size: 1.5em; font-weight: bold;
+            margin-bottom: 0.6em; transition: background 0.3s; 
+        }
+        .dark-mode .monthly-payment-circle, .dark-mode .payment-breakdown-circle { background: #444; }
+        .monthly-payment-circle.visible, .payment-breakdown-circle.visible { box-shadow: 0 0 0 3px #2a9d8f; }
+        .charts-grid { display: flex; flex-wrap: wrap; gap: 2em; }
+        .chart-box { width: 480px; min-width: 320px; background: #fafafa; border-radius: 10px; padding: 1em; margin-bottom: 1.5em;}
+        .dark-mode .chart-box { background: #222; }
+        #amortization-table { width: 100%; border-collapse: collapse; margin-top: 1.2em; }
+        #amortization-table th, #amortization-table td { border: 1px solid #ccc; padding: 0.5em 0.8em; }
+        #amortization-table th { background: #eee; }
+        .dark-mode #amortization-table th { background: #333; }
+        #error-message { color: #d32f2f; font-weight: bold; margin-bottom: 1em; }
+        @media (max-width: 900px) {
+            .charts-grid, .form-container, .circles-container { flex-direction: column; }
+            .chart-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Mortgage Calculator</h1>
+    <div id="error-message" role="alert" style="display:none"></div>
+
+    <div id="form-container" class="form-container">
+        <form id="mortgageForm" class="form-section" autocomplete="off">
+            <label>
+                Principal ($):
+                <input id="principal" type="number" min="0" step="1000" required value="500000">
+            </label>
+            <label>
+                Amortization (years):
+                <input id="amortization" type="number" min="1" max="40" required value="25">
+            </label>
+            <label>
+                Term (years):
+                <input id="term" type="number" min="1" max="10" required value="5">
+            </label>
+            <label>
+                Interest Rate (%):
+                <input id="interestRate" type="text" required value="5">
+            </label>
+            <label>
+                Extra Payment ($/mo):
+                <input id="extraPayment" type="number" min="0" step="50" value="0">
+            </label>
+            <label>
+                First Payment Date:
+                <input id="firstPaymentDate" type="date">
+                <button id="clearDateBtn" type="button">Clear</button>
+            </label>
+            <button type="submit">Calculate</button>
+        </form>
+
+        <div class="form-section" style="min-width:240px">
+            <label>
+                Dark Mode: 
+                <input type="checkbox" id="mode-switch">
+            </label>
+            <div class="circles-container">
+                <div class="monthly-payment-circle" id="monthlyPaymentCircle" aria-live="polite"></div>
+                <div class="payment-breakdown-circle" id="paymentBreakdownCircle" aria-live="polite"></div>
+            </div>
+            <div>
+                <label>Interest Saved: <input id="extraSavedTotal" type="text" readonly></label>
+                <label>Paid off in: <input id="paidOffIn" type="text" readonly></label>
+                <label>Out of: <input id="outOf" type="text" readonly></label>
+            </div>
+            <button id="printChartsBtn" type="button">Print Charts</button>
+            <button id="printScheduleBtn" type="button">Print Amortization Table</button>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-box"><div id="chart" style="height:400px"></div></div>
+        <div class="chart-box"><div id="chart2" style="height:400px"></div></div>
+        <div class="chart-box"><div id="chart4" style="height:400px"></div></div>
+        <div class="chart-box"><div id="chart6" style="height:400px"></div></div>
+        <div class="chart-box"><div id="chart11" style="height:400px"></div></div>
+        <div class="chart-box"><div id="chart12" style="height:400px"></div></div>
+        <div class="chart-box"><div id="chart13" style="height:400px"></div></div>
+        <!-- Comparison charts (toggle hidden if not needed) -->
+        <div class="chart-box" id="comp-chart3-box"><div id="chart3" style="height:400px"></div></div>
+        <div class="chart-box" id="comp-chart7-box"><div id="chart7" style="height:400px"></div></div>
+        <div class="chart-box" id="comp-chart8-box"><div id="chart8" style="height:400px"></div></div>
+        <div class="chart-box" id="comp-chart9-box"><div id="chart9" style="height:400px"></div></div>
+        <div class="chart-box" id="comp-chart10-box"><div id="chart10" style="height:400px"></div></div>
+        <div class="chart-box" id="comp-chart14-box"><div id="chart14" style="height:400px"></div></div>
+    </div>
+
+    <h2>Amortization Table</h2>
+    <table id="amortization-table" aria-live="polite">
+        <thead>
+            <tr>
+                <th>Payment Date/#</th>
+                <th>Total Payment</th>
+                <th>Extra Payment</th>
+                <th>Principal</th>
+                <th>Interest</th>
+                <th>Remaining Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script src="mortgagecalculator.js"></script>
+</body>
+</html>
